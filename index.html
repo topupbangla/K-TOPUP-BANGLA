@@ -756,8 +756,20 @@ function confirmOrder(){
   const currentUser = firebase.auth().currentUser;
   const uid = currentUser ? currentUser.uid : 'anonymous_' + Date.now();
 
+  // determine full name: prefer cachedProfileInfo, then firebase user displayName, then email prefix, else empty
+  let fullNameValue = '';
+  if(cachedProfileInfo && cachedProfileInfo.fullName){
+    fullNameValue = cachedProfileInfo.fullName;
+  } else if(currentUser && currentUser.displayName){
+    fullNameValue = currentUser.displayName;
+  } else if(currentUser && currentUser.email){
+    fullNameValue = currentUser.email.split('@')[0];
+  } else {
+    fullNameValue = '';
+  }
+
   // Add uid and default status so we can query/update from profile "MY Order"
-  const orderData={productName:selectedProduct?selectedProduct.name:'Unknown',productPrice:selectedProduct?selectedProduct.price:'৳ 0',lastFour:last4,UID:uidInput,time:new Date().toLocaleString(), uid: uid, status: 'pending'};
+  const orderData={productName:selectedProduct?selectedProduct.name:'Unknown',productPrice:selectedProduct?selectedProduct.price:'৳ 0',lastFour:last4,UID:uidInput,time:new Date().toLocaleString(), uid: uid, status: 'pending', fullName: fullNameValue};
   firebase.database().ref('orders').push(orderData).then(()=>{
     msgEl.style.color='green';msgEl.innerText='✅ অর্ডার সফলভাবে জমা হয়েছে!';document.getElementById('lastFourDigits').value='';
     document.getElementById('userUID').value='';
