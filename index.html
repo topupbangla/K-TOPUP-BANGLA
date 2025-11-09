@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>TOPUP BD</title>
 <style>
-/* ... পূর্বের CSS এর অনেকটাই অপরিবর্তিত রাখা হয়েছে; শুধু প্রোফাইল/মাইঅর্ডার সম্পর্কিত স্টাইল ও ক্যানসেল বাটনের স্টাইল যোগ করা হয়েছে ... */
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif}
-body{min-height:100vh;color:#222;background:#E1D4C1; no-repeat center center fixed;background-size: cover;animation:none;}
+body{min-height:100vh;color:#222;background:#E1D4C1; background-repeat:no-repeat; background-position:center center; background-attachment:fixed;background-size: cover;animation:none;}
 header{background:#E1D4C1;color:#FF1493;text-align:center;padding:14px 20px;font-size:1.1em;font-weight:700;border-radius:80px;box-shadow:0 6px 25px rgba(127,0,255,0.4);position:sticky;top:12px;z-index:120;letter-spacing:0px;text-transform:uppercase;overflow:hidden;animation:glowPulse 4s ease-in-out infinite;}
 header::before{content:"";position:absolute;top:0;left:-100%;width:20%;height:100%;background:linear-gradient(120deg,rgba(255,255,255,0.3),rgba(255,255,255,0));transform:skewX(-25deg);animation:headerShine 3.5s infinite;}
 @keyframes headerShine{0%{left:-100%;}50%{left:130%;}100%{left:130%;}}
@@ -59,12 +58,6 @@ header::before{content:"";position:absolute;top:0;left:-100%;width:20%;height:10
 .orderFormFrame button:hover{transform:scale(1.05);}
 .orderFormFrame #orderMsg{margin-top:12px;font-weight:600;}
 
-/* ===== UPDATED BACK BUTTON: Improved Bengali tone, refined design & sizing =====
-   - New friendly Bengali label
-   - Slightly smaller, elegant pill
-   - Good contrast and subtle elevation
-   - Visible placement right where the UI expects it (keeps document flow)
-*/
 .backBtn{
   display:inline-block;
   padding:8px 18px;
@@ -87,7 +80,6 @@ header::before{content:"";position:absolute;top:0;left:-100%;width:20%;height:10
   justify-content:center;
 }
 
-/* small left arrow icon style (using simple character for compatibility) */
 .backBtn .backIcon{ font-size:1.05em; transform:translateX(-1px); }
 
 /* hover: lift slightly and deepen color */
@@ -102,18 +94,15 @@ header::before{content:"";position:absolute;top:0;left:-100%;width:20%;height:10
   transform: translateY(0) scale(0.99);
 }
 
-/* accessible focus state */
 .backBtn:focus{
   outline:3px solid rgba(255,175,218,0.28);
   outline-offset:4px;
 }
 
-/* For very small screens reduce the size so it never obstructs content */
 @media(max-width:420px){
   .backBtn{ padding:7px 14px; font-size:0.92em; margin-bottom:12px; }
 }
 
-/* other modals and profile stuff left unchanged */
 .authModal{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:1500;}
 .authBox{background:#fff;padding:20px;border-radius:12px;max-width:420px;width:92%;box-shadow:0 12px 30px rgba(0,0,0,0.3);text-align:center;}
 .tabBtns{display:flex;gap:8px;justify-content:center;margin-bottom:12px;}
@@ -201,7 +190,6 @@ header::before{content:"";position:absolute;top:0;left:-100%;width:20%;height:10
   .orderAlertFrame{padding:29px 6vw 20px;}
 }
 
-/* ===== loggedInfo/profile button styling (unchanged premium) ===== */
 .loggedInfo{
   position:fixed;
   right:22px;
@@ -274,7 +262,8 @@ header::before{content:"";position:absolute;top:0;left:-100%;width:20%;height:10
     <div id="registerPanel">
       <input type="text" id="regFullName" placeholder="Full Name" aria-label="পুরা নাম"/>   <!-- ✅ নতুন ফিল্ড -->
       <input type="text" id="regUsername" placeholder="Username " aria-label="ইউজারনেম"/>
-      <input type="email" id="regEmail" placeholder="Enter your email (optional)" aria-label="ইমেইল (অপশনাল)"/>
+      <!-- NOW Gmail is required -->
+      <input type="email" id="regEmail" placeholder="Gmail address (required)" aria-label="ইমেইল (Gmail) *" />
       <input type="password" id="regPassword" placeholder="Password" aria-label="পাসওয়ার্ড"/>
       <input type="password" id="regConfirm" placeholder="Confirm Password" aria-label="পাসওয়ার্ড নিশ্চিত করুন"/>
       <button onclick="createAccount()" class="bigBtn" style="padding:10px 16px;margin-top:8px;">রেজিস্টার করুন</button>
@@ -336,6 +325,8 @@ header::before{content:"";position:absolute;top:0;left:-100%;width:20%;height:10
     <h2>একাউন্ট তৈরি করুন</h2>
     <input type="text" id="newFullName" placeholder="Full Name" aria-label="পুরা নাম" />
     <input type="text" id="newUsername" placeholder="Username" aria-label="ইউজারনেম" />
+    <!-- NEW: require Gmail here too -->
+    <input type="email" id="newEmail" placeholder="Gmail address (required)" aria-label="ইমেইল (Gmail) *" />
     <input type="password" id="newPassword" placeholder="Password" aria-label="পাসওয়ার্ড" />
     <input type="password" id="confirmPassword" placeholder="Confirm Password" aria-label="পাসওয়ার্ড নিশ্চিত করুন" />
     <button onclick="createAccountFromPage()" class="bigBtn">তৈরি করুন</button>
@@ -432,6 +423,13 @@ let myOrdersQueryRef = null;
 let myOrdersValueListener = null;
 let myOrdersChildRemovedListener = null;
 
+function isValidGmail(email){
+  if(!email) return false;
+  const e = String(email).trim().toLowerCase();
+  // allow gmail.com and googlemail.com
+  return /^[a-z0-9._%+-]+@(gmail\.com|googlemail\.com)$/.test(e);
+}
+
 // ----------------- AUTH FUNCTIONS -----------------
 function openOrderAlertModal(){
   orderAlertModal.style.display = 'flex';
@@ -442,11 +440,6 @@ function closeOrderAlertModal(){
   orderAlertModal.setAttribute('aria-hidden','true');
 }
 
-/*
-  FIX: ensure profile modal is closed before opening the register/login modal.
-  Also stop propagation when button clicked, and use a tiny delay so UI doesn't
-  stack two modals (that caused the "double registration" experience).
-*/
 function openCreateAccount(e){
   if(e && typeof e.stopPropagation === 'function') e.stopPropagation();
   closeProfileModal();
@@ -493,29 +486,26 @@ async function createAccount(){
   const confirm = document.getElementById('regConfirm').value;
   if(!fullName){ regMsg.style.color='red'; regMsg.innerText='Full Name দিতে হবে।'; return; }
   if(!username){ regMsg.style.color='red'; regMsg.innerText='Username দিতে হবে।'; return; }
+  if(!emailInput){ regMsg.style.color='red'; regMsg.innerText='Gmail ঠিকানা দিতে হবে (e.g. example@gmail.com)।'; return; }
+  if(!isValidGmail(emailInput)){ regMsg.style.color='red'; regMsg.innerText='কেবল Gmail ঠিকানা গ্রহণ করা হয় (gmail.com বা googlemail.com)।'; return; }
   if(!pass || !confirm){ regMsg.style.color='red'; regMsg.innerText='Password ও Confirm চাই।'; return; }
   if(pass !== confirm){ regMsg.style.color='red'; regMsg.innerText='Password মিলছে না।'; return; }
-  let email = emailInput;
-  if(!email){
-    let san = username.replace(/\s+/g,'').toLowerCase();
-    if(!san) san = 'user' + Date.now();
-    email = san + '@gmail.com';
-  }
+
   try{
     await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    const userCred = await firebase.auth().createUserWithEmailAndPassword(email, pass);
+    const userCred = await firebase.auth().createUserWithEmailAndPassword(emailInput, pass);
     await userCred.user.updateProfile({displayName: username});
     const userId = userCred.user.uid;
     await firebase.database().ref('users/' + userId).set({
       username: username,
       fullName: fullName,
-      email: email,
+      email: emailInput,
       createdAt: new Date().toISOString()
     });
     cachedProfileInfo = {
       fullName: fullName,
       username: username,
-      email: email
+      email: emailInput
     };
     regMsg.style.color='green';
     regMsg.innerText='✅ রেজিস্ট্রেশন সফল হয়েছে। তুমি এখন লগইন অবস্থায় আছো।';
@@ -524,7 +514,7 @@ async function createAccount(){
     console.error(err);
     regMsg.style.color='red';
     if(err.code === 'auth/email-already-in-use'){
-      regMsg.innerText = 'এই ইমেইলটি আগে থেকেই ব্যবহৃত। অন্য ইউজারনেম/ইমেইল try করো।';
+      regMsg.innerText = 'এই Gmail ইমেইলটি আগে থেকেই ব্যবহৃত। অন্য Gmail ব্যবহার করুন।';
     } else if(err.code === 'auth/weak-password'){
       regMsg.innerText = 'পাসওয়ার্ড খুব দুর্বল। কমপক্ষে ৬ ক্যারেক্টার দিন।';
     } else if(err.code === 'auth/invalid-email'){
@@ -538,34 +528,40 @@ async function createAccount(){
 async function createAccountFromPage(){
   const fullName = document.getElementById('newFullName').value.trim();
   const username = document.getElementById('newUsername').value.trim();
+  const emailInput = document.getElementById('newEmail').value.trim();
   const pass = document.getElementById('newPassword').value;
   const confirm = document.getElementById('confirmPassword').value;
   const msgEl = document.getElementById('accountMsg');
   msgEl.style.color='black'; msgEl.innerText='Processing...';
   if(!fullName){ msgEl.style.color='red'; msgEl.innerText='Full Name লাগবে।'; return; }
   if(!username){ msgEl.style.color='red'; msgEl.innerText='Username লাগবে।'; return; }
+  if(!emailInput){ msgEl.style.color='red'; msgEl.innerText='Gmail ঠিকানা দিতে হবে।'; return; }
+  if(!isValidGmail(emailInput)){ msgEl.style.color='red'; msgEl.innerText='শুধু Gmail ঠিকানা গ্রহণ করা হয়।'; return; }
   if(!pass || !confirm){ msgEl.style.color='red'; msgEl.innerText='পাসওয়ার্ড ও কনফার্ম লাগবে।'; return; }
   if(pass !== confirm){ msgEl.style.color='red'; msgEl.innerText='পাসওয়ার্ড মেলেনি।'; return; }
-  let san = username.replace(/\s+/g,'').toLowerCase();
-  if(!san) san = 'user' + Date.now();
-  const email = san + '@gmail.com';
+
   try{
     await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    const userCred = await firebase.auth().createUserWithEmailAndPassword(email, pass);
+    const userCred = await firebase.auth().createUserWithEmailAndPassword(emailInput, pass);
     await userCred.user.updateProfile({displayName: username});
     await firebase.database().ref('users/' + userCred.user.uid).set({
-      username: username, email: email, fullName: fullName, createdAt: new Date().toISOString()
+      username: username, email: emailInput, fullName: fullName, createdAt: new Date().toISOString()
     });
     cachedProfileInfo = {
       fullName: fullName,
       username: username,
-      email: email
+      email: emailInput
     };
     msgEl.style.color='green'; msgEl.innerText='রেজিস্ট্রেশন সফল হয়েছে।';
     setTimeout(()=>{ document.getElementById('createAccountPage').style.display='none'; },800);
   }catch(e){
     console.error(e);
-    msgEl.style.color='red'; msgEl.innerText='Error: ' + (e.message || e.code);
+    msgEl.style.color='red';
+    if(e.code === 'auth/email-already-in-use'){
+      msgEl.innerText = 'এই Gmail আগে থেকেই নিবন্ধিত আছে।';
+    } else {
+      msgEl.innerText = 'Error: ' + (e.message || e.code);
+    }
   }
 }
 
@@ -627,7 +623,7 @@ async function loginUser(){
   try{
     await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     await firebase.auth().signInWithEmailAndPassword(email, pass);
-    loginMsg.style.color='green'; loginMsg.innerText='✅ লগইন সফল হয়েছে।';
+    loginMsg.style.color='green'; loginMsg.innerText='LOHIN DONE';
     setTimeout(()=>{ closeAuthModal(); },700);
   }catch(err){
     console.error(err);
@@ -769,7 +765,8 @@ function confirmOrder(){
   }
 
   // Add uid and default status so we can query/update from profile "MY Order"
-  const orderData={productName:selectedProduct?selectedProduct.name:'Unknown',productPrice:selectedProduct?selectedProduct.price:'৳ 0',lastFour:last4,UID:uidInput,time:new Date().toLocaleString(), uid: uid, status: 'pending', fullName: fullNameValue};
+  // NOTE: changed field name from UID to "FF ID CODE" as requested
+  const orderData={productName:selectedProduct?selectedProduct.name:'Unknown',productPrice:selectedProduct?selectedProduct.price:'৳ 0',lastFour:last4,"FF ID CODE":uidInput,time:new Date().toISOString(), uid: uid, status: 'pending', fullName: fullNameValue};
   firebase.database().ref('orders').push(orderData).then(()=>{
     msgEl.style.color='green';msgEl.innerText='✅ অর্ডার সফলভাবে জমা হয়েছে!';document.getElementById('lastFourDigits').value='';
     document.getElementById('userUID').value='';
@@ -826,7 +823,9 @@ function copyText(elementId){
   // show transient feedback on the nearby button
   const btns = document.querySelectorAll('.copyBtn');
   btns.forEach(btn=>{
-    if(btn && btn.previousElementSibling && btn.previousElementSibling.id === elementId){
+    // improved matching: check data-target attribute if present, else fallback to previousElementSibling
+    const targetId = btn.getAttribute('data-target') || (btn.previousElementSibling ? btn.previousElementSibling.id : null);
+    if(targetId === elementId){
       const originalText = btn.innerText;
       btn.innerText = 'Copied ✅';
       setTimeout(()=>{btn.innerText = originalText;},1200);
@@ -834,12 +833,6 @@ function copyText(elementId){
   });
 }
 
-/* ===== NEW: View "MY Order" logic (UPGRADED PREMIUM) =====
-   - Fix applied: When opening My Orders, the profile modal closes first (so it won't remain visible beneath).
-   - Orders list styling improved.
-   - Small "Cancel" button added for pending orders (updates order.status -> 'cancelled').
-   - Realtime listeners cleaned up on close to avoid duplicates.
-*/
 function viewMyOrders(){
   const user = firebase.auth().currentUser;
   if(!user){
@@ -879,11 +872,14 @@ function viewMyOrders(){
       return;
     }
     const entries = Object.entries(data);
-    // Sort by time if time exists (latest first)
+    // Sort by ISO time if time exists (latest first)
     entries.sort((a,b)=>{
       const oa = a[1].time || '';
       const ob = b[1].time || '';
-      return ob.localeCompare(oa);
+      // parse ISO or fallback
+      const ta = Date.parse(oa) || 0;
+      const tb = Date.parse(ob) || 0;
+      return tb - ta;
     });
 
     entries.forEach(([key, order])=>{
@@ -982,10 +978,6 @@ function closeMyOrdersModal(){
   myOrdersQueryRef = null;
 }
 
-/* Cancel order function:
-   - Updates order.status => 'cancelled' (so admin can still see it)
-   - Only allows cancel for pending orders and for the order owner
-*/
 function cancelOrder(orderKey, orderObj, btnEl){
   if(!orderKey) return;
   const user = firebase.auth().currentUser;
@@ -1010,7 +1002,7 @@ function cancelOrder(orderKey, orderObj, btnEl){
     btnEl.innerText = 'Processing...';
   }
 
-  const updates = { status: 'cancelled', cancelledAt: new Date().toLocaleString() };
+  const updates = { status: 'cancelled', cancelledAt: new Date().toISOString() };
   firebase.database().ref('orders/' + orderKey).update(updates).then(()=>{
     if(btnEl){ btnEl.innerText = 'Cancelled'; }
     // the realtime value listener will update the list immediately to show new status
