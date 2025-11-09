@@ -1,0 +1,957 @@
+/*
+=========================================
+১. গ্লোবাল স্টাইল এবং রিসেট
+=========================================
+*/
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Poppins",sans-serif; /* ফন্ট পরিবর্তন হবে না, যা আছে তাই থাকবে */
+}
+
+body{
+    min-height:100vh;
+    color:#222;
+    background:#E1D4C1;
+    background-repeat:no-repeat;
+    background-position:center center;
+    background-attachment:fixed;
+    background-size: cover;
+    animation:none;
+}
+
+/*
+=========================================
+২. হেডার এবং শপ নেম স্টাইল (Header & Shop Name)
+=========================================
+*/
+header{
+    background:#E1D4C1;
+    color:#FF1493;
+    text-align:center;
+    padding:14px 20px;
+    font-size:1.1em;
+    font-weight:700;
+    border-radius:80px;
+    box-shadow:0 6px 25px rgba(127,0,255,0.4);
+    position:sticky;
+    top:12px;
+    z-index:120;
+    letter-spacing:0px;
+    text-transform:uppercase;
+    overflow:hidden;
+    animation:glowPulse 4s ease-in-out infinite;
+}
+
+header::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:20%;
+    height:100%;
+    background:linear-gradient(120deg,rgba(255,255,255,0.3),rgba(255,255,255,0));
+    transform:skewX(-25deg);
+    animation:headerShine 3.5s infinite;
+}
+
+/* হেডার গ্লো এবং শাইন অ্যানিমেশন */
+@keyframes headerShine{
+    0%{left:-100%;}
+    50%{left:130%;}
+    100%{left:130%;}
+}
+@keyframes glowPulse{
+    0%,100%{box-shadow:0 0 25px rgba(127,0,255,0.5);}
+    50%{box-shadow:0 0 45px rgba(255,106,0,0.6);}
+}
+
+.shop-name-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:25px 0;
+}
+
+.shop-name{
+    background:#E1D4C1;
+    color:#FF1493;
+    padding:20px 45px;
+    font-size:1.3em;
+    font-weight:700;
+    border-radius:100px;
+    box-shadow:0 8px 25px rgba(238,9,121,0.4);
+    text-transform:uppercase;
+    letter-spacing:0px;
+    position:relative;
+    overflow:hidden;
+    animation:shine 4s linear infinite;
+}
+
+.shop-name::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-75%;
+    width:50%;
+    height:100%;
+    background:linear-gradient(120deg,rgba(255,255,255,0.3),rgba(255,255,255,0));
+    transform:skewX(-25deg);
+    animation:slide 3s infinite;
+}
+
+/* শপ নেম অ্যানিমেশন */
+@keyframes slide{
+    0%{left:-75%;}
+    50%{left:125%;}
+    100%{left:125%;}
+}
+@keyframes shine{
+    0%,100%{box-shadow:0 0 20px rgba(238,9,121,0.4);}
+    50%{box-shadow:0 0 35px rgba(255,106,0,0.6);}
+}
+
+/*
+=========================================
+৩. প্রোডাক্ট গ্রিড স্টাইল (Container & Product Cards)
+=========================================
+*/
+.container{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:16px;
+    padding:20px;
+    margin-top:8px;
+}
+
+.product{
+    background:#987284;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+    transition:all .3s ease;
+    cursor:pointer;
+    border:2px solid rgba(0,0,0,0.05);
+    position:relative;
+}
+
+.product:hover{
+    transform:translateY(-8px) scale(1.03);
+    box-shadow:0 12px 26px rgba(0,0,0,0.18);
+    background:linear-gradient(145deg,#ff84bd,#ff60a8);
+}
+
+.product::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:18px;
+    background:radial-gradient(circle at 30% 30%,rgba(255,192,203,0.4),transparent 60%),radial-gradient(circle at 70% 70%,rgba(255,255,255,0.3),transparent 60%);
+    opacity:0;
+    transition:opacity .4s ease;
+}
+
+.product:hover::before{
+    opacity:1;
+}
+
+.product img{
+    width:100%;
+    height:180px;
+    object-fit:contain;
+    transition:.3s;
+}
+
+.product:hover img{
+    transform:scale(1.07);
+}
+
+.product-info{
+    padding:12px 10px;
+    text-align:center;
+    background:rgba(255,255,255,0.85);
+}
+
+.product-info h3{
+    font-size:1em;
+    font-weight:600;
+    margin-bottom:6px;
+    color:#111;
+}
+
+.product-info p{
+    color:#ff007f;
+    font-weight:700;
+    font-size:0.95em;
+}
+
+/*
+=========================================
+৪. প্রোডাক্ট ডিটেইল পেজ (Product Detail Page)
+=========================================
+*/
+#productPage{
+    display:none;
+    padding:16px;
+    min-height:70vh;
+}
+
+.productPageWrapper{
+    display:flex;
+    gap:20px;
+    align-items:flex-start;
+    justify-content:center;
+    flex-wrap:wrap;
+    background:#A5F1F6;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* ইমেজ কলাম */
+.imagesColumn{
+    flex:1;
+    display:flex;
+    gap:16px;
+    max-width:800px;
+}
+
+.imagesColumn .imgWrap{
+    flex:1;
+    background:#fff;
+    border-radius:120px;
+    overflow:hidden;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    opacity:0;
+    transform:translateY(20px);
+    animation:fadeSlide 0.5s forwards;
+}
+
+.imagesColumn .imgWrap:nth-child(1){
+    animation-delay:0.1s;
+}
+
+@keyframes fadeSlide{
+    to{opacity:1;transform:translateY(0);}
+}
+
+.imagesColumn img{
+    width:100%;
+    height:auto;
+    max-height:300px;
+    object-fit:contain;
+    display:block;
+    cursor:pointer;
+    border-radius:12px;
+}
+
+/* ফুলস্ক্রিন ভিউ */
+.fullscreen-view{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.9);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    animation:fadeIn .3s ease;
+}
+
+.fullscreen-view img{
+    max-width:80%;
+    max-height:80%;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(255,255,255,0.3);
+}
+
+.fullscreen-view.closeable{
+    cursor:pointer;
+}
+
+/* অর্ডার কলাম (ডানে স্থির অংশ) */
+.orderColumn{
+    width:120px;
+    background:linear-gradient(180deg,#ffffff,#fbfbfb);
+    border-radius:12px;
+    padding:18px;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-items:center;
+    position:sticky;
+    top:84px;
+    height:fit-content;
+}
+
+.orderColumn h2{
+    font-size:1.25em;
+    text-align:center;
+}
+
+.orderColumn .price{
+    font-weight:700;
+    font-size:1.05em;
+    color:#111;
+}
+
+.orderColumn .desc{
+    font-size:0.95em;
+    color:#444;
+    text-align:center;
+}
+
+/* পেমেন্ট বক্স এবং বাটন */
+.paymentBox{
+    width:100%;
+    background:000000; /* এটি সম্ভবত একটি রঙ কোড যা ভুল, কিন্তু অপরিবর্তিত রাখা হয়েছে */
+    color:#000000;
+    border-radius:30px;
+    padding:10px;
+    text-align:center;
+    font-weight:600;
+    box-shadow:0 5px 15px rgba(127,0,255,0.3);
+    position:relative;
+}
+
+.copyBtn{
+    background:#A5F1F6;
+    color:#000000;
+    font-size:0.8em;
+    padding:4px 8px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    margin-top:6px;
+    transition:.3s;
+}
+
+.copyBtn:hover{
+    background:#ffe5ff;
+    color:#e100ff;
+}
+
+.bigBtn{
+    display:inline-block;
+    background:#740E4C;
+    color:#FFF4DF;
+    padding:14px 22px;
+    border-radius:30px;
+    text-decoration:none;
+    font-weight:700;
+    font-size:1.05em;
+    box-shadow:0 8px 18px rgba(37,211,102,.25);
+    border:none;
+    transition:.3s;
+}
+
+.bigBtn:hover{
+    transform:scale(1.05);
+}
+
+.bigBtn:active{
+    transform:translateY(1px);
+}
+
+.phone{
+    display:none;
+}
+
+.share-note{
+    font-size:0.82em;
+    color:#666;
+    text-align:center;
+    padding-top:6px;
+}
+
+.product-desc-frame{
+    background:#FFFAF0;
+    color:#000000;
+    border:none;
+    box-shadow:0 5px 20px rgba(127,0,255,0.4);
+    padding:20px 25px;
+    border-radius:16px;
+    text-align:center;
+    font-size:1.05em;
+    font-weight:500;
+    margin-bottom:25px;
+    animation:fadeIn .4s ease;
+    transition:all .3s ease;
+}
+
+/*
+=========================================
+৫. অর্ডার ফর্ম পেজ (Order Form Page)
+=========================================
+*/
+#orderFormPage{
+    display:none;
+    text-align:center;
+    padding:20px;
+}
+
+.orderFormFrame{
+    background: #FFF4DF;
+    padding:25px 20px;
+    border-radius:20px;
+    box-shadow:0 8px 25px rgba(255,75,43,0.4);
+    color:#000000;
+    max-width:400px;
+    margin:0 auto;
+    animation:fadeIn .5s ease;
+}
+
+.orderFormFrame h2{
+    margin-bottom:15px;
+    font-size:1.4em;
+    font-weight:600;
+}
+
+.orderFormFrame p{
+    margin-bottom:15px;
+    font-size:0.95em;
+    font-weight:500;
+}
+
+.orderFormFrame input{
+    width:90%;
+    padding:10px;
+    margin:10px 0;
+    border-radius:10px;
+    border:none;
+    outline:none;
+}
+
+.orderFormFrame button{
+    background:#740E4C;
+    color:#fff;
+    padding:12px 20px;
+    border:none;
+    border-radius:12px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.orderFormFrame button:hover{
+    transform:scale(1.05);
+}
+
+.orderFormFrame #orderMsg{
+    margin-top:12px;
+    font-weight:600;
+}
+
+/*
+=========================================
+৬. ব্যাক বাটন স্টাইল (Back Button)
+=========================================
+*/
+.backBtn{
+    display:inline-block;
+    padding:8px 18px;
+    margin-bottom:14px;
+    background: linear-gradient(135deg,#fff4fb,#ffd9f7);
+    color:#7a003f;
+    border-radius:999px;
+    cursor:pointer;
+    font-weight:700;
+    font-size:0.98em;
+    letter-spacing:0.2px;
+    box-shadow: 0 8px 20px rgba(122,0,64,0.12);
+    border: 1px solid rgba(122,0,64,0.08);
+    transition: transform .16s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease, background .18s ease;
+    position:relative;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    justify-content:center;
+}
+
+.backBtn .backIcon{
+    font-size:1.05em;
+    transform:translateX(-1px);
+}
+
+.backBtn:hover{
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 14px 34px rgba(122,0,64,0.18);
+    background: linear-gradient(135deg,#fff8fd,#ffeff9);
+}
+
+.backBtn:active{
+    transform: translateY(0) scale(0.99);
+}
+
+.backBtn:focus{
+    outline:3px solid rgba(255,175,218,0.28);
+    outline-offset:4px;
+}
+
+@media(max-width:420px){
+    .backBtn{
+        padding:7px 14px;
+        font-size:0.92em;
+        margin-bottom:12px;
+    }
+}
+
+/*
+=========================================
+৭. অথেন্টিকেশন এবং প্রোফাইল মডেল (Auth & Profile Modals)
+=========================================
+*/
+/* অথেন্টিকেশন মডেল */
+.authModal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:1500;
+}
+.authBox{
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    max-width:420px;
+    width:92%;
+    box-shadow:0 12px 30px rgba(0,0,0,0.3);
+    text-align:center;
+}
+.tabBtns{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin-bottom:12px;
+}
+.tabBtns button{
+    flex:1;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    font-weight:700;
+}
+.tabActive{
+    background:#740E4C;
+    color:#fff;
+}
+.tabInactive{
+    background:#f0f0f0;
+    color:#333;
+}
+.authBox input{
+    width:90%;
+    padding:10px;
+    margin:8px auto;
+    border-radius:8px;
+    border:1px solid #ddd;
+}
+.smallNote{
+    font-size:0.85em;
+    color:#666;
+    margin-top:6px;
+}
+
+/* প্রোফাইল মডেল */
+#profileModal {
+    display:none;
+    position:fixed;
+    z-index:3000;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    justify-content:center;
+    align-items:center;
+    animation:fadeIn .23s;
+}
+.profileModalFrame{
+    background:#fff;
+    padding:34px 36px 26px 36px;
+    border-radius:38px;
+    box-shadow:0 8px 40px rgba(127,0,255,0.20),0 3px 10px rgba(0,0,0,0.08);
+    min-width:270px;
+    max-width:99vw;
+    text-align:center;
+    position:relative;
+    animation:fadeIn 0.17s;
+}
+.profileModalFrame .profileBigIcon{
+    font-size:3.5em;
+    background:linear-gradient(120deg,#d9afe8,#e1f0ff);
+    color:#691060;
+    border-radius:50%;
+    width:70px;
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 14px;
+    border-bottom:2px solid #ffb5f8;
+    border-left:2px solid #dcbbff;
+    box-shadow:0 2px 11px #ffdae6;
+}
+.profileModalFrame .profileTitle{
+    font-size:1.3em;
+    font-weight:700;
+    color:#8a0a72;
+    margin-bottom:6px;
+}
+.profileModalFrame .profileField{
+    margin-bottom:7px;
+    font-size:1em;
+}
+.profileModalFrame .profileLabel{
+    font-weight:bold;
+    color:#8900b4;
+    margin-right:4px;
+}
+.profileModalFrame .closeProfileBtn{
+    display:inline-block;
+    padding:9px 33px;
+    border-radius:22px;
+    background:#ba0e5b;
+    color:#fff;
+    font-weight:600;
+    font-size:1em;
+    border:none;
+    cursor:pointer;
+    transition:.15s;
+    margin-top:12px;
+    box-shadow:0 2px 10px #ffc1e0;
+}
+.profileModalFrame .closeProfileBtn:hover{
+    background:#740E4C;
+    color:#fffbea;
+    box-shadow:0 4px 15px #ffd7fa;
+}
+.profileModalFrame .profileLoginBtnWrap {
+    margin-top: 14px;
+}
+.profileModalFrame .profileLoginBtn {
+    background: #740E4C;
+    color: #FFF4DF;
+    padding: 11px 22px;
+    border-radius: 30px;
+    font-weight: 700;
+    border: none;
+    font-size: 1.04em;
+    box-shadow: 0 8px 18px rgba(152,40,126,0.13);
+    cursor:pointer;
+    transition:.2s;
+    margin-bottom:8px;
+}
+.profileModalFrame .profileLoginBtn:hover {
+    background:#ff5eb0;
+    color:#fff;
+    transform: scale(1.04);
+}
+
+/*
+=========================================
+৮. অর্ডার অ্যালার্ট মডেল (Order Alert Modal)
+=========================================
+*/
+#orderAlertModal{
+    display:none;
+    position:fixed;
+    z-index:2000;
+    inset:0;
+    background:rgba(25,5,40,0.35);
+    backdrop-filter: blur(1.5px);
+    justify-content:center;
+    align-items:center;
+    animation:fadeIn .20s;
+}
+.orderAlertFrame{
+    background:linear-gradient(120deg,#fff6fa 80%, #fffcfe 100%);
+    border-radius: 24px;
+    box-shadow: 0 8px 36px rgba(233,50,141,0.18), 0 1.5px 4.5px rgba(0,0,0,0.07);
+    padding:38px 28px 28px 28px;
+    max-width:340px;
+    width:96%;
+    text-align:center;
+    border: 1.5px solid #ff80c6;
+    position:relative;
+    animation:fadeIn 0.15s;
+}
+.orderAlertFrame .alertIcon{
+    font-size:2.3em;
+    line-height:1;
+    color:#ee158e;
+    margin-bottom:11px;
+    filter: drop-shadow(0 4px 12px #ffdde6);
+}
+.orderAlertFrame .alertTitle{
+    font-size:1.14em;
+    font-weight:700;
+    color:#99005c;
+    margin-bottom:7px;
+    letter-spacing:0.5px;
+}
+.orderAlertFrame .alertMsg{
+    color:#3d2040;
+    font-size:1em;
+    margin-bottom:18px;
+    white-space: pre-line;
+}
+.orderAlertFrame .alertBtn{
+    display:inline-block;
+    padding:9px 38px;
+    border-radius: 18px;
+    background:#ff64af;
+    color:#fff;
+    font-weight:600;
+    font-size:1em;
+    border:none;
+    cursor:pointer;
+    transition:.17s;
+    box-shadow:0 2px 10px #ffdae6;
+}
+.orderAlertFrame .alertBtn:hover{
+    background:#99005c;
+    color:#fffbea;
+    box-shadow:0 5px 16px #ffc1e0;
+}
+
+/*
+=========================================
+৯. মাই অর্ডারস মডেল (My Orders Modal)
+=========================================
+*/
+#myOrdersModal {
+    display:none;
+    position:fixed;
+    z-index:3600;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    justify-content:center;
+    align-items:center;
+    animation:fadeIn .18s;
+}
+.myOrdersFrame {
+    background: linear-gradient(180deg,#fff 0%, #fff8ff 100%);
+    border-radius:20px;
+    padding:18px;
+    width:92%;
+    max-width:560px;
+    box-shadow:0 14px 50px rgba(18,6,38,0.22);
+    text-align:left;
+    border:1px solid rgba(140,40,120,0.06);
+}
+.myOrdersFrame h3 {
+    text-align:center;
+    color:#8a0a72;
+    margin-bottom:8px;
+    font-size:1.15em;
+}
+.myOrdersList {
+    max-height: 56vh;
+    overflow:auto;
+    padding:8px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+/* অর্ডার আইটেম */
+.orderItem {
+    border-radius:14px;
+    padding:12px 14px;
+    background:linear-gradient(135deg,#ffffff,#fff0fb);
+    box-shadow:0 6px 18px rgba(138,10,114,0.06);
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    border:1px solid rgba(138,10,114,0.06);
+}
+.orderItem .left {
+    font-size:0.95em;
+    color:#2b1031;
+    max-width:72%;
+}
+.orderItem .left strong {
+    display:block;
+    font-size:1.03em;
+    color:#55003b;
+    margin-bottom:6px;
+}
+.orderItem .meta {
+    font-size:0.82em;
+    color:#5b4153;
+    margin-top:6px;
+}
+.orderItem .statusArea {
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:flex-end;
+    min-width:110px;
+}
+.status {
+    font-weight:800;
+    padding:6px 10px;
+    border-radius:20px;
+    font-size:0.85em;
+    white-space:nowrap;
+    box-shadow:0 2px 8px rgba(0,0,0,0.06);
+}
+.status.pending {
+    background:#fff4d9;
+    color:#7a4a00;
+    border:1px solid #ffe8b8;
+}
+.status.accepted {
+    background:#e8ffef;
+    color:#067a3a;
+    border:1px solid #bff1c8;
+}
+.status.rejected {
+    background:#ffeef0;
+    color:#8a0030;
+    border:1px solid #ffc6cf;
+}
+
+/* বাতিল বাটন */
+.cancelBtn {
+    background: linear-gradient(135deg,#fff4fb,#ffd9f7);
+    color:#7a003f;
+    border:1px solid rgba(122,0,64,0.09);
+    padding:6px 10px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:0.82em;
+    cursor:pointer;
+    box-shadow:0 6px 18px rgba(122,0,64,0.06);
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+.cancelBtn:hover{
+    transform: translateY(-2px);
+    box-shadow:0 10px 28px rgba(122,0,64,0.10);
+    background: linear-gradient(135deg,#fff8fd,#ffeef9);
+}
+.cancelBtn:active{
+    transform:translateY(0);
+}
+
+/* অর্ডার না থাকলে নোট */
+.myOrdersEmpty {
+    text-align:center;
+    color:#666;
+    padding:16px 8px;
+    font-size:0.95em;
+}
+
+/*
+=========================================
+১০. লগড-ইন ইনফো এবং লগআউট বাটন (Logged Info & Logout)
+=========================================
+*/
+.loggedInfo{
+    position:fixed;
+    right:22px;
+    top:18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,245,255,0.75));
+    padding:6px;
+    border-radius:999px;
+    box-shadow:0 6px 20px rgba(18, 6, 38, 0.28), inset 0 1px 0 rgba(255,255,255,0.6);
+    display:flex;
+    gap:8px;
+    align-items:center;
+    z-index:1800;
+    transition:transform .18s ease, box-shadow .18s ease;
+    backdrop-filter: blur(6px) saturate(120%);
+    -webkit-backdrop-filter: blur(6px) saturate(120%);
+}
+.loggedInfo:hover{
+    transform: translateY(-3px) scale(1.02);
+    box-shadow:0 10px 34px rgba(18, 6, 38, 0.32), inset 0 1px 0 rgba(255,255,255,0.72);
+}
+.logoutBtn{
+    background: linear-gradient(135deg,#ffeff8,#ffe6ff);
+    color:#7a003f;
+    font-weight:800;
+    border:none;
+    border-radius:50%;
+    width:56px;
+    height:56px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.25em;
+    transition: transform .16s cubic-bezier(.2,.9,.2,1), box-shadow .16s;
+    box-shadow:0 6px 18px rgba(122,0,64,0.18), 0 1px 0 rgba(255,255,255,0.6) inset;
+    cursor:pointer;
+    outline: none;
+    position:relative;
+}
+.logoutBtn:hover{
+    transform: translateY(-3px) scale(1.03);
+    box-shadow:0 14px 36px rgba(122,0,64,0.22), 0 1px 0 rgba(255,255,255,0.72) inset;
+    background: linear-gradient(135deg,#fff4fb,#ffd9f7);
+}
+.logoutBtn:active{
+    transform: translateY(0) scale(0.99);
+}
+.logoutBtn::after{
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.14), rgba(255,255,255,0));
+    opacity: 0.95;
+}
+.logoutBtn svg{
+    width:26px;
+    height:26px;
+    color: inherit;
+}
+.loggedInfo .userLabel{
+    display:none;
+    font-weight:700;
+    color:#520033;
+    font-size:0.92em;
+    padding:0 8px 0 4px;
+    white-space:nowrap;
+    align-self:center;
+}
+
+/*
+=========================================
+১১. মিডিয়া কোয়েরি (Media Queries - রেসপনসিভ ডিজাইন)
+=========================================
+*/
+@media(min-width:980px){
+    .loggedInfo{ right:28px; top:20px; }
+    .loggedInfo .userLabel{ display:inline-block; }
+    .logoutBtn{ width:56px; height:56px; }
+}
+@media(max-width:420px){
+    .loggedInfo{ right:12px; top:10px; padding:4px; }
+    .logoutBtn{ width:48px; height:48px; font-size:1.05em; }
+    .logoutBtn svg{ width:22px; height:22px; }
+}
+
+@media (max-width:880px){
+    .container{grid-template-columns:repeat(2,1fr)}
+    .product img{max-height:180px}
+    .productPageWrapper{flex-direction:column;align-items:center}
+    .orderColumn{width:92%;position:static;top:auto}
+    .imagesColumn{flex-direction:row;gap:12px}
+    .imagesColumn img{max-height:200px}
+    .orderFormFrame{width:95%;padding:20px;}
+    .statusArea { min-width:95px; }
+}
+@media (max-width:480px){
+    .container{grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
+    .product img{max-height:160px}
+    .imagesColumn img{max-height:180px}
+    .bigBtn{padding:12px 18px;font-size:1em}
+    .orderFormFrame input{width:95%;}
+    .orderAlertFrame{padding:29px 6vw 20px;}
+}
